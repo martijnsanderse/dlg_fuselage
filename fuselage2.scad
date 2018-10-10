@@ -7,6 +7,8 @@ include<es9051.scad>;
 include<g-rx6.scad>;
 include<lipo.scad>;
 
+$fn=20;
+
 points = [
     [0, 5],
     [2, 0],
@@ -68,19 +70,27 @@ fuse_points = [
     [3, 3],
     [2.0, 10],
     [2.6, 20],
-    [1.5, 22],
-    [1, 23],
-    [1, 30]
+    [0, 22],
+    [0.5, 23],
+    [0.5, 40]//,
+    // [0, 40]
 ];
 
+function concatenate(L1, L2) = [for(L=[L1, L2], a=L) a];
+function scale_2d(sx, sy, a) = [a[0]*sx, a[1]*sy];
+
+fuse_points_scaled = [for (fp = fuse_points ) scale_2d(7.5, 10, fp) ];
+bezier_points = bezier_points(fuse_points_scaled, fn=200);
+// add a point so the polygon starts and ends on the y-axis.
+// otherwise the rotate_extrude won't render.
+bezier_points_fix = concat( bezier_points, [[0,400]]);
+
 module fuselage() {
-    %polygon(fuse_points);
-    polygon(bezier_points(fuse_points, fn=50));
-    rotate_extrude(convexity=10, $fn=50)
-    polygon(bezier_points(fuse_points, fn=50));
+    //polygon(fuse_points);
+    //polygon(bezier_points(fuse_points, fn=50));
+    rotate_extrude(convexity=2, $fn=200)
+    polygon(bezier_points_fix);
 }
-
-
 
 module half_wing() {
     scalexy = 157.5; // ag13 airfoil is 1mm root chord
@@ -103,46 +113,106 @@ module wing () {
     mirror(v=[0,0,1]) half_wing();
 }
 
-// difference() {
-    
-    union() {
-        %scale([7.5,7.5,10])
-        fuselage();
+module saddle () {
 
-        translate([0,13,100]) {
-            rotate([90,0,0])
-            rotate([0,0,90])
-            color("gray")
-            es9051();
-            translate([8.5,0, 0])
-            rotate([90,0,0])
-            rotate([0,0,90])
-            color("gray")
-            es9051();
-        }
-
-        translate([7, 3.5, 20])
-        rotate([90,0,0])
-        rotate([0,0,90])
-        color("teal")
-        g_rx6();
-
-        translate([10, 3.5, 50])
-        rotate([90,0,0])
-        rotate([0,0,90])
-        color("green")
-        lipo();
-        }
-
-    union() {
-        translate([0, -10, 150])
-        rotate([0,-90,180])
-        wing();
-
-        //hatchs
-
+    hull() {
+        cylinder(h=20, r=5);
+        translate ([0, 130, 0])
+        cylinder(h=20, r=5);
     }
-// }
+
+}
+
+// intersection () {
+//     // select a segment for printing
+//     // lower half  (front)
+//     translate([-50, -50, 0])
+//     cube([100, 100, 100]);
+    
+    //middle
+    // %translate([-50, -50, 100])
+    // cube([100, 100, 100]);
+
+    // tail
+    //translate([-50, -50, 200])
+    //cube([100, 100, 100]);    
+
+    %difference() {    
+        union() {
+            //scale([7.5,7.5,10])
+            fuselage();
+
+            // translate([0,13,100]) {
+            //     rotate([90,0,0])
+            //     rotate([0,0,90])
+            //     color("gray")
+            //     es9051();
+            //     translate([8.5,0, 0])
+            //     rotate([90,0,0])
+            //     rotate([0,0,90])
+            //     color("gray")
+            //     es9051();
+            // }
+
+            // translate([7, 3.5, 20])
+            // rotate([90,0,0])
+            // rotate([0,0,90])
+            // color("teal")
+            // g_rx6();
+
+            // translate([10, 3.5, 50])
+            // rotate([90,0,0])
+            // rotate([0,0,90])
+            // color("green")
+            // lipo();
+
+            translate([0, 0, 155])
+            rotate([90,0,0])
+            saddle();
+        }
+
+
+        union() {
+            // cut out the shape of the wing, and everything above it.
+            hull () {
+                translate([0, -16, 140])
+                rotate([0,-90,180])
+                wing();
+                // translate([0, -15, 300])
+                // rotate([0,-90,180])
+                // wing();
+            }
+
+        // //     //hatchs
+
+        }
+
+     }
+//}
+
+translate([0,13,100]) {
+    rotate([90,0,0])
+    rotate([0,0,90])
+    color("gray")
+    es9051();
+    translate([8.5,0, 0])
+    rotate([90,0,0])
+    rotate([0,0,90])
+    color("gray")
+    es9051();
+}
+
+translate([7, 3.5, 20])
+rotate([90,0,0])
+rotate([0,0,90])
+color("teal")
+g_rx6();
+
+translate([10, 3.5, 50])
+rotate([90,0,0])
+rotate([0,0,90])
+color("green")
+lipo();
 
 //boom
 //color("blue")
