@@ -71,16 +71,18 @@ fuse_points = [
     [2.0, 10],
     [2.6, 20],
     [0, 22],
-    [0.5, 23],
-    [0.5, 40]//,
+    [0.65, 23],
+    [0.65, 40]//,
     // [0, 40]
 ];
+
+my_fn = 200;
 
 function concatenate(L1, L2) = [for(L=[L1, L2], a=L) a];
 function scale_2d(sx, sy, a) = [a[0]*sx, a[1]*sy];
 
 fuse_points_scaled = [for (fp = fuse_points ) scale_2d(7.5, 10, fp) ];
-bezier_points = bezier_points(fuse_points_scaled, fn=200);
+bezier_points = bezier_points(fuse_points_scaled, fn=my_fn);
 // add a point so the polygon starts and ends on the y-axis.
 // otherwise the rotate_extrude won't render.
 bezier_points_fix = concat( bezier_points, [[0,400]]);
@@ -88,7 +90,7 @@ bezier_points_fix = concat( bezier_points, [[0,400]]);
 module fuselage() {
     //polygon(fuse_points);
     //polygon(bezier_points(fuse_points, fn=50));
-    rotate_extrude(convexity=2, $fn=200)
+    rotate_extrude(convexity=2, $fn=my_fn)
     polygon(bezier_points_fix);
 }
 
@@ -116,9 +118,13 @@ module wing () {
 module saddle () {
 
     hull() {
-        cylinder(h=20, r=5);
-        translate ([0, 130, 0])
-        cylinder(h=20, r=5);
+        cylinder(h=20, r=5, $fn=my_fn);
+        
+        translate ([0, 120, 0])
+        cylinder(h=25, r=5 , $fn=my_fn);
+        // this smaller cylinder makes for a sort of ramp.
+        translate ([0, -50, 0])
+        cylinder(h=10, r=3, , $fn=my_fn);
     }
 
 }
@@ -126,16 +132,16 @@ module saddle () {
 intersection () {
     // select a segment for printing
     // lower half  (front)
-    translate([-50, -50, 0])
-    cube([100, 100, 100]);
+    // translate([-50, -50, 0])
+    // cube([100, 100, 100]);
     
     //middle
-    // %translate([-50, -50, 100])
+    // translate([-50, -50, 100])
     // cube([100, 100, 100]);
 
     // tail
-    //translate([-50, -50, 200])
-    //cube([100, 100, 100]);    
+    translate([-50, -50, 250])
+    cube([100, 100, 150]);    
 
     difference() {    
         union() {
