@@ -123,11 +123,11 @@ module saddle () {
 
 }
 
-// intersection () {
-//     // select a segment for printing
-//     // lower half  (front)
-//     translate([-50, -50, 0])
-//     cube([100, 100, 100]);
+intersection () {
+    // select a segment for printing
+    // lower half  (front)
+    translate([-50, -50, 0])
+    cube([100, 100, 100]);
     
     //middle
     // %translate([-50, -50, 100])
@@ -137,7 +137,7 @@ module saddle () {
     //translate([-50, -50, 200])
     //cube([100, 100, 100]);    
 
-    %difference() {    
+    difference() {    
         union() {
             //scale([7.5,7.5,10])
             fuselage();
@@ -181,38 +181,44 @@ module saddle () {
                 // translate([0, -15, 300])
                 // rotate([0,-90,180])
                 // wing();
-            }
+            };
+
+            //boom
+            translate([0,0,20])
+            color("red")
+            cylinder(d=7.0, h=500);
+
 
         // //     //hatchs
 
         }
 
      }
-//}
-
-translate([0,13,100]) {
-    rotate([90,0,0])
-    rotate([0,0,90])
-    color("gray")
-    es9051();
-    translate([8.5,0, 0])
-    rotate([90,0,0])
-    rotate([0,0,90])
-    color("gray")
-    es9051();
 }
 
-translate([7, 3.5, 20])
-rotate([90,0,0])
-rotate([0,0,90])
-color("teal")
-g_rx6();
+// translate([0,13,100]) {
+//     rotate([90,0,0])
+//     rotate([0,0,90])
+//     color("gray")
+//     es9051();
+//     translate([8.5,0, 0])
+//     rotate([90,0,0])
+//     rotate([0,0,90])
+//     color("gray")
+//     es9051();
+// }
 
-translate([10, 3.5, 50])
-rotate([90,0,0])
-rotate([0,0,90])
-color("green")
-lipo();
+// translate([7, 3.5, 20])
+// rotate([90,0,0])
+// rotate([0,0,90])
+// color("teal")
+// g_rx6();
+
+// translate([10, 3.5, 50])
+// rotate([90,0,0])
+// rotate([0,0,90])
+// color("green")
+// lipo();
 
 //boom
 //color("blue")
