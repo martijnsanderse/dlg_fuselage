@@ -129,7 +129,7 @@ module saddle () {
 
 }
 
-intersection () {
+//intersection () {
     // select a segment for printing
     // lower half  (front)
     // translate([-50, -50, 0])
@@ -139,9 +139,13 @@ intersection () {
     // translate([-50, -50, 100])
     // cube([100, 100, 100]);
 
+    //middle 2
+//    translate([-50, -50, 200])
+//    cube([100, 100, 50]);
+
     // tail
-    translate([-50, -50, 250])
-    cube([100, 100, 150]);    
+    // translate([-50, -50, 250])
+    // cube([100, 100, 150]);    
 
     difference() {    
         union() {
@@ -200,7 +204,7 @@ intersection () {
         }
 
      }
-}
+//}
 
 // translate([0,13,100]) {
 //     rotate([90,0,0])
